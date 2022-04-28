@@ -23,10 +23,10 @@ const LoginPage = ({ addToken }) => {
     axios
       .post("api/login", userData)
       .then((res) => {
+        setLoginError(false);
         console.log(res.data);
         window.sessionStorage.setItem("auth_token", res.data.access_token);
         addToken(res.data.access_token);
-        setLoginError(false);
         navigate("/");
       })
       .catch((e) => {
