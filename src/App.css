@@ -151,20 +151,15 @@ i {
 }
 
 .navbar-text {
-  padding-left: 8px;
-  padding-right: 8px;
+  display: inline-flex;
+  align-items: center;
 }
 
 tr, td {
   text-align: center;
 }
 
-.fas {
-  padding-right: 8px;
-  cursor: pointer;
-}
-
-.fa-users, .fa-user-shield {
+.dropdown-item {
   color: dimgrey;
 }
 
