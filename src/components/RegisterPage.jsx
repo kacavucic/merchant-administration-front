@@ -44,85 +44,96 @@ const RegisterPage = () => {
       });
   }
   return (
-    <section>
-      <div className="dark-overlay">
-        <div className="home-inner">
-          <div className="container">
-            <div className="row">
-              <div className="card col-md-6 offset-md-3 col-lg-4 offset-lg-4">
-                <div className="card-body">
-                  <h4>Registration form</h4>
-                  <hr></hr>
-                  <form id="registration" onSubmit={handleRegister}>
-                    <div className="form-group">
-                      <label className="lead" htmlFor="name">
-                        Name
-                      </label>
-                      <input
-                        className="form-control"
-                        id="name"
-                        name="name"
-                        placeholder="Enter name"
-                        required
-                        type="text"
-                        minLength="3"
-                        maxLength="255"
-                        onInput={handleInput}
-                      ></input>
-                    </div>
-                    <div className="form-group">
-                      <label className="lead" htmlFor="email">
-                        Email
-                      </label>
-                      <input
-                        className="form-control"
-                        id="email"
-                        name="email"
-                        placeholder="Enter email"
-                        required
-                        type="email"
-                        maxLength="255"
-                        onInput={handleInput}
-                      ></input>
-
-                      {emailDuplicate.duplicate === false ? (
-                        <></>
-                      ) : (
-                        <p className="alert alert-danger">
-                          {emailDuplicate.message}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="form-group">
-                      <label className="lead" htmlFor="password">
-                        Password
-                      </label>
-                      <input
-                        className="form-control"
-                        id="password"
-                        name="password"
-                        // pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%!^&+=])(?=\S+$).{8,20}$"
-                        // title="Must contain at least one digit, one uppercase, one lowercase, one special character, and at least 8 and at most 20 characters "
-                        placeholder="Enter password"
-                        required
-                        type="password"
-                        minLength="8"
-                        onInput={handleInput}
-                      ></input>
-                    </div>
-                    <div className="form-group">
-                      <button className="btn btn-primary" type="submit">
-                        Register
-                      </button>
-                    </div>
-                  </form>
+    <section className="vh-100">
+      <div className="container-fluid h-custom">
+        <div className="row d-flex justify-content-center align-items-center h-100">
+          <div className="card col-md-8 col-lg-6 col-xl-4 ">
+            <div className="card-body">
+              <form onSubmit={handleRegister}>
+                <div className="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
+                  <p className="lead fw-normal mb-0 me-3">Register</p>
                 </div>
-              </div>
+                <div className="divider d-flex align-items-center my-4"></div>
+                <div className="form-outline mb-4">
+                  <label className="form-label" htmlFor="name">
+                    Name
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    className="form-control form-control-lg"
+                    placeholder="Enter name"
+                    minLength="3"
+                    maxLength="255"
+                    onInput={handleInput}
+                  />
+                </div>
+
+                <div className="form-outline mb-3">
+                  <label className="form-label" htmlFor="email">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    className="form-control form-control-lg"
+                    placeholder="Enter email"
+                    required
+                    maxLength="255"
+                    onInput={handleInput}
+                  />
+
+                  {emailDuplicate.duplicate === false ? (
+                    <></>
+                  ) : (
+                    <>
+                      <hr></hr>
+                      <p className="alert alert-danger">
+                        {emailDuplicate.message}
+                      </p>
+                    </>
+                  )}
+                </div>
+
+                <div className="form-outline mb-3">
+                  <label className="form-label" htmlFor="password">
+                    Password
+                  </label>
+                  <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    className="form-control form-control-lg"
+                    placeholder="Enter password"
+                    // pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%!^&+=])(?=\S+$).{8,20}$"
+                    // title="Must contain at least one digit, one uppercase, one lowercase, one special character, and at least 8 and at most 20 characters "
+                    required
+                    minLength="8"
+                    onInput={handleInput}
+                  />
+                </div>
+                <div className="text-center text-lg-start mt-4 pt-2">
+                  <button
+                    type="submit"
+                    className="btn btn-primary btn-lg"
+                    style={{
+                      paddingLeft: 2.5 + "rem",
+                      paddingRight: 2.5 + "rem",
+                    }}
+                  >
+                    Register
+                  </button>
+                  <p className="small fw mt-2 pt-1 mb-0">
+                    Already have an account?{" "}
+                    <a className="link-secondary" href="/login">
+                      Click here to login
+                    </a>
+                  </p>
+                </div>
+              </form>
             </div>
-            <p className="text-center">
-              Already have an account? <a href="/login">Click here to login</a>
-            </p>
           </div>
         </div>
       </div>

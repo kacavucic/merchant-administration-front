@@ -37,155 +37,35 @@
   }
 }
 
-/* width */
-::-webkit-scrollbar {
-  width: 10px;
+.divider:after,
+.divider:before {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #eee;
 }
 
-/* Track */
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
+.h-custom {
+  height: calc(100% - 73px);
 }
 
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #888;
+@media (max-width: 450px) {
+  .h-custom {
+    height: 100%;
+  }
 }
 
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
+.form-white.input-group>.form-control:focus {
+  border-color: #fff;
+  box-shadow: inset 0 0 0 1px #fff;
 }
 
-
-/*region MESSAGES*/
-.alert {
-  padding: 15px;
-  margin-top: 10px;
-  border: 1px solid transparent;
-  border-radius: 4px;
+.navbar-dark .navbar-nav .nav-link {
+  color: #fff;
 }
 
-.alert-info {
-  border-color: #bce8f1;
-  color: #31708f;
-  background-color: #d9edf7;
+.navbar-dark .navbar-nav .nav-link:hover,
+.navbar-dark .navbar-nav .nav-link:focus {
+  color: rgba(255, 255, 255, 0.75);
 }
 
-.alert-error {
-  color: #a94442;
-  background-color: #f2dede;
-  border-color: #ebccd1;
-}
-
-.global-errors {
-  list-style-type: none;
-  padding: 0;
-}
-
-/*endregion*/
-body {
-  font-family: Helvetica, sans-serif;
-}
-
-.home-inner{
-  overflow-y: scroll;
-}
-
-footer {
-  background-color: darkgrey;
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  height: 25px;
-}
-
-.navbar-brand {
-  font-family: Rockwell, sans-serif;
-}
-
-.dark-overlay {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-}
-
-.home-inner {
-  padding-top: 56px;
-  padding-bottom: 25px;
-  height: 100%;
-}
-
-.container {
-  margin-top: 2rem;
-}
-
-.container {
-  margin-top: 2rem;
-}
-
-.btn-primary {
-  float: right;
-}
-
-.btn-secondary {
-  float: left;
-}
-
-.form-group .iti {
-  display: block;
-}
-
-.container .table-container {
-  margin: 0 auto;
-}
-
-i {
-  color: lightgrey;
-}
-
-.navbar-text {
-  display: inline-flex;
-  align-items: center;
-}
-
-tr, td {
-  text-align: center;
-}
-
-.dropdown-item {
-  color: dimgrey;
-}
-
-.remove-user {
-  border: none;
-  background-color: transparent;
-  color: rgba(255, 0, 0, 0.64);
-}
-
-.edit-user {
-  border: none;
-  background-color: transparent;
-  color: rgba(45, 41, 41, 0.64);
-
-}
-
-.download-button {
-  background-color: DodgerBlue;
-  border: none;
-  color: white;
-  padding: 12px 30px;
-  cursor: pointer;
-  font-size: 20px;
-  float: right;
-}
-
-.download-button:hover {
-  background-color: RoyalBlue;
-}

@@ -5,6 +5,9 @@ import RegisterPage from './components/RegisterPage';
 import NavBar from './components/NavBar';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState } from 'react';
+import MerchantsPage from './components/MerchantsPage';
+import HomePage from './components/HomePage';
+import OneMerchant from './components/OneMerchant';
 
 function App() {
   const [token, setToken] = useState();
@@ -18,9 +21,13 @@ function App() {
   return (
     <BrowserRouter className="App">
       <Routes>
-        <Route path='/login' element={<LoginPage addToken={addToken} addUser={addUser} />} />
-        <Route path='/register' element={<RegisterPage />} />
-        <Route path='/' element={<NavBar token={token} user={user} />}></Route>
+        <Route path='/' element={<NavBar token={token} user={user} addToken={addToken} addUser={addUser} />}>
+          <Route index element={<HomePage />} />
+          <Route path='/login' element={<LoginPage addToken={addToken} addUser={addUser} />} />
+          <Route path='/register' element={<RegisterPage />} />
+          <Route path='merchants' element={<MerchantsPage />} />
+          <Route path='merchants/:id' element={<OneMerchant />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
