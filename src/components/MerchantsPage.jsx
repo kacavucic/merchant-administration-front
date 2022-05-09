@@ -2,7 +2,7 @@ import React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import DataTable from "react-data-table-component";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InfoIcon from "@mui/icons-material/Info";
@@ -131,6 +131,12 @@ function MerchantsPage({ user, token }) {
     navigate(e.currentTarget.id);
   }
 
+  function handleOpenNewMerchantPage(e) {
+    e.preventDefault();
+    console.log(e.currentTarget.id);
+    navigate("newMerchant");
+  }
+
   const [pending, setPending] = useState(true);
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -164,11 +170,11 @@ function MerchantsPage({ user, token }) {
           </div>
           <div className="row">
             <div className="col">
-              <a href="#">
-                <button className="btn btn-primary float-end" type="button">
+              {/* <Link to="newMerchant"> */}
+                <button className="btn btn-primary float-end" type="button" onClick={handleOpenNewMerchantPage}>
                   New Merchant
                 </button>
-              </a>
+              {/* </Link> */}
             </div>
           </div>
         </div>

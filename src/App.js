@@ -8,6 +8,7 @@ import { useState } from 'react';
 import MerchantsPage from './components/MerchantsPage';
 import HomePage from './components/HomePage';
 import OneMerchant from './components/OneMerchant';
+import NewMerchant from './components/NewMerchant';
 
 function App() {
   const [token, setToken] = useState(window.sessionStorage.getItem('auth_token'));
@@ -15,7 +16,7 @@ function App() {
     setToken(authToken);
   }
   const [user, setUser] = useState(window.sessionStorage.getItem('auth_user'));
-  function addUser(username ) {
+  function addUser(username) {
     setUser(username);
   }
   return (
@@ -27,6 +28,7 @@ function App() {
         <Route path='register' element={<RegisterPage />} />
         <Route path='merchants' element={<MerchantsPage token={token} user={user} />} />
         <Route path='merchants/:id' element={<OneMerchant token={token} user={user} />} />
+        <Route path='merchants/newMerchant' element={<NewMerchant token={token} user={user} />} />
       </Routes>
     </BrowserRouter>
   );
