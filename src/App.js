@@ -10,24 +10,23 @@ import HomePage from './components/HomePage';
 import OneMerchant from './components/OneMerchant';
 
 function App() {
-  const [token, setToken] = useState();
+  const [token, setToken] = useState(window.sessionStorage.getItem('auth_token'));
   function addToken(authToken) {
     setToken(authToken);
   }
-  const [user, setUser] = useState();
-  function addUser(username) {
+  const [user, setUser] = useState(window.sessionStorage.getItem('auth_user'));
+  function addUser(username ) {
     setUser(username);
   }
   return (
     <BrowserRouter className="App">
+      <NavBar token={token} user={user} addToken={addToken} addUser={addUser} />
       <Routes>
-        <Route path='/' element={<NavBar token={token} user={user} addToken={addToken} addUser={addUser} />}>
-          <Route index element={<HomePage />} />
-          <Route path='/login' element={<LoginPage addToken={addToken} addUser={addUser} />} />
-          <Route path='/register' element={<RegisterPage />} />
-          <Route path='merchants' element={<MerchantsPage />} />
-          <Route path='merchants/:id' element={<OneMerchant />} />
-        </Route>
+        <Route exact path="/" element={<HomePage />} />
+        <Route path='login' element={<LoginPage addToken={addToken} addUser={addUser} />} />
+        <Route path='register' element={<RegisterPage />} />
+        <Route path='merchants' element={<MerchantsPage token={token} user={user} />} />
+        <Route path='merchants/:id' element={<OneMerchant token={token} user={user} />} />
       </Routes>
     </BrowserRouter>
   );

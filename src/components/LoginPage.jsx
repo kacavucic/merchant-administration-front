@@ -1,9 +1,9 @@
 import React from "react";
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
-const LoginPage = ({ addToken, addUser }) => {
+function LoginPage({ addToken, addUser }) {
   const [userData, setUserData] = useState({
     email: "",
     password: "",
@@ -38,14 +38,13 @@ const LoginPage = ({ addToken, addUser }) => {
       });
   }
   return (
-    <section className="vh-100">
-      <div className="container-fluid h-custom">
-        <div className="row d-flex justify-content-center align-items-center h-100">
+      <div className="container-fluid mt-5 mb-5">
+        <div className="row d-flex justify-content-center align-items-center">
           <div className=" card col-md-8 col-lg-6 col-xl-4 ">
             <div className=" card-body ">
               <form onSubmit={handleLogin}>
                 <div className="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
-                  <p className="lead fw-normal mb-0 me-3">Log In</p>
+                  <p className="lead fw-normal mb-0 me-3">Login</p>
                 </div>
                 <div className="divider d-flex align-items-center my-4"></div>
                 {loginError === false ? (
@@ -58,14 +57,14 @@ const LoginPage = ({ addToken, addUser }) => {
 
                 <div className="form-outline mb-4">
                   <label className="form-label" htmlFor="email">
-                    Email address
+                    Email
                   </label>
                   <input
                     type="email"
                     id="email"
                     name="email"
                     className="form-control form-control-lg"
-                    placeholder="Enter a valid email address"
+                    placeholder="Enter email"
                     onInput={handleInput}
                   />
                 </div>
@@ -114,9 +113,9 @@ const LoginPage = ({ addToken, addUser }) => {
                   </button>
                   <p className="small fw mt-2 pt-1 mb-0">
                     Don't have an account?{" "}
-                    <a className="link-secondary" href="/register">
+                    <Link className="link-secondary" to="/register">
                       Register here
-                    </a>
+                    </Link>
                   </p>
                 </div>
               </form>
@@ -124,8 +123,7 @@ const LoginPage = ({ addToken, addUser }) => {
           </div>
         </div>
       </div>
-    </section>
   );
-};
+}
 
 export default LoginPage;

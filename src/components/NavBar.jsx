@@ -1,8 +1,12 @@
 import React from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser } from "@fortawesome/free-regular-svg-icons";
+import Icon from "@mui/material/Icon";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
-const NavBar = ({ token, user, addToken, addUser }) => {
+function NavBar({ token, user, addToken, addUser }) {
   let navigate = useNavigate();
   function handleLogout(e) {
     // e.preventDefault();
@@ -18,8 +22,8 @@ const NavBar = ({ token, user, addToken, addUser }) => {
         console.log(response);
         console.log(JSON.stringify(response.data));
 
-        window.sessionStorage.setItem("auth_token", null);
-        window.sessionStorage.setItem("auth_user", null);
+        window.sessionStorage.removeItem("auth_token");
+        window.sessionStorage.removeItem("auth_user");
         addToken(null);
         addUser(null);
         //navigate("/");
@@ -28,7 +32,6 @@ const NavBar = ({ token, user, addToken, addUser }) => {
         console.log(error);
       });
   }
-
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -50,9 +53,9 @@ const NavBar = ({ token, user, addToken, addUser }) => {
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav d-flex flex-row me-auto me-3">
               <li className="nav-item me-3 me-lg-0 dropdown">
-                <a className="nav-link" href="/">
+                <Link className="nav-link" to="/">
                   Home
-                </a>
+                </Link>
               </li>
               {token == null ? (
                 <></>
@@ -107,8 +110,8 @@ const NavBar = ({ token, user, addToken, addUser }) => {
             ) : (
               <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
                 <li className="nav-item">
-                  <a className="nav-link" href="#">
-                    {user}
+                  <a className="nav-link disabled" href="#">
+                    <AccountCircleIcon icon={faUser} /> {user}
                   </a>
                 </li>
                 <li className="nav-item">
@@ -121,9 +124,8 @@ const NavBar = ({ token, user, addToken, addUser }) => {
           </div>
         </div>
       </nav>
-      <Outlet />
     </>
   );
-};
+}
 
 export default NavBar;
