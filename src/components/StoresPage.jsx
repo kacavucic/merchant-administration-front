@@ -2,7 +2,7 @@ import React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import DataTable from "react-data-table-component";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useParams } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InfoIcon from "@mui/icons-material/Info";
@@ -15,17 +15,24 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { Waveform } from "@uiball/loaders";
 
-function MerchantsPage({ user, token }) {
-  const [merchants, setMerchants] = useState();
+function StoresPage({ user, token, merchant }) {
+  // let { id } = useParams();
+
+  const [stores, setStores] = useState();
 
   useEffect(() => {
-    if (merchants == null) {
-      axios.get("api/merchants").then((res) => {
+    if (merchant == undefined) {
+      axios.get("api/stores").then((res) => {
         console.log(res.data);
-        setMerchants(res.data.merchants);
+        setStores(res.data.stores);
+      });
+    } else {
+      axios.get("api/merchants/" + merchant.id + "/stores").then((res) => {
+        console.log(res.data);
+        setStores(res.data.stores);
       });
     }
-  }, [merchants]);
+  }, [merchant]);
 
   const [open, setOpen] = useState(false);
   const [idToDelete, setIdToDelete] = useState();
@@ -46,7 +53,7 @@ function MerchantsPage({ user, token }) {
 
     var config = {
       method: "delete",
-      url: "http://127.0.0.1:8000/api/merchants/" + idToDelete,
+      url: "http://127.0.0.1:8000/api/stores/" + idToDelete,
       headers: {
         Authorization: "Bearer " + token,
       },
@@ -55,11 +62,9 @@ function MerchantsPage({ user, token }) {
 
     axios(config)
       .then(function (response) {
-        // console.log(JSON.stringify(merchants));
-        // console.log(JSON.stringify(idToDelete));
         console.log(JSON.stringify(response.data));
-        const del = merchants.filter((merchant) => idToDelete != merchant.id);
-        setMerchants(del);
+        const del = stores.filter((store) => idToDelete != store.id);
+        setStores(del);
         handleCloseDeleteDialog();
       })
       .catch(function (error) {
@@ -91,13 +96,28 @@ function MerchantsPage({ user, token }) {
       selector: (row) => row.email,
     },
     {
+      name: "Merchant",
+      omit: merchant == undefined ? false : true,
+      selector: (row) => (row.merchant && row.merchant.display_name) || "/",
+      cell: (row) =>
+        (row.merchant && (
+          <Link
+            title="Merchant information"
+            to={"/merchants/" + row.merchant.id}
+          >
+            {row.merchant.display_name}
+          </Link>
+        )) ||
+        "/",
+    },
+    {
       name: "Info",
       selector: (row) => row.year,
       button: true,
       cell: (row) => (
         <IconButton
           id={row.id}
-          title="Merchant information"
+          title="Store information"
           onClick={handleOpenInfoPage}
         >
           <InfoIcon />
@@ -112,7 +132,7 @@ function MerchantsPage({ user, token }) {
         <div>
           <IconButton
             id={row.id}
-            title="Delete merchant"
+            title="Delete store"
             onClick={handleOpenDeleteDialog}
           >
             <DeleteIcon sx={{ color: red[500] }} />
@@ -122,8 +142,6 @@ function MerchantsPage({ user, token }) {
     },
   ];
 
-  // const data = merchants;
-
   let navigate = useNavigate();
   function handleOpenInfoPage(e) {
     e.preventDefault();
@@ -131,10 +149,10 @@ function MerchantsPage({ user, token }) {
     navigate(e.currentTarget.id);
   }
 
-  function handleOpenNewMerchantPage(e) {
+  function handleOpenNewStorePage(e) {
     e.preventDefault();
     console.log(e.currentTarget.id);
-    navigate("/newMerchant");
+    navigate("newStore");
   }
 
   const [pending, setPending] = useState(true);
@@ -152,9 +170,13 @@ function MerchantsPage({ user, token }) {
           <div className="row">
             <div className="col-xs-12 col-md-12"></div>
             <DataTable
-              title="Merchants"
+              title={
+                merchant == undefined
+                  ? "Stores"
+                  : "Stores of " + merchant.display_name
+              }
               columns={columns}
-              data={merchants}
+              data={stores}
               defaultSortField="id"
               direction="auto"
               fixedHeaderScrollHeight="300px"
@@ -170,21 +192,23 @@ function MerchantsPage({ user, token }) {
           </div>
           <div className="row">
             <div className="col">
-              {/* <Link to="newMerchant"> */}
-                <button className="btn btn-primary float-end" type="button" onClick={handleOpenNewMerchantPage}>
-                  New Merchant
-                </button>
-              {/* </Link> */}
+              <button
+                className="btn btn-primary float-end"
+                type="button"
+                onClick={handleOpenNewStorePage}
+              >
+                New Store
+              </button>
             </div>
           </div>
         </div>
         <Dialog open={open} onClose={handleCloseDeleteDialog}>
           <DialogTitle id="alert-dialog-title">
-            {"Delete this merchant?"}
+            {"Delete this store?"}
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              Merhant will be permanentrly deleted.
+              Store will be permanentrly deleted.
             </DialogContentText>
           </DialogContent>
           <DialogActions>
@@ -197,16 +221,6 @@ function MerchantsPage({ user, token }) {
       </div>
     </>
   );
-
-  // <div>
-  //   {merchants == null ? (
-  //     <></>
-  //   ) : (
-  //     merchants.map((merchant) => (
-  //       <OneMerchant merchant={merchant} key={merchant.id} />
-  //     ))
-  //   )}
-  // </div>
 }
 
-export default MerchantsPage;
+export default StoresPage;
