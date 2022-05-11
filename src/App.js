@@ -9,35 +9,45 @@ import MerchantsPage from './components/MerchantsPage';
 import HomePage from './components/HomePage';
 import OneMerchant from './components/OneMerchant';
 import StoresPage from './components/StoresPage';
+import OneStore from './components/OneStore';
 
 function App() {
-  const [token, setToken] = useState(window.sessionStorage.getItem('auth_token'));
-  function addToken(authToken) {
-    setToken(authToken);
+  const [auth, setAuth] = useState(
+    {
+      token: window.sessionStorage.getItem('auth_token'),
+      username: window.sessionStorage.getItem('auth_user'),
+      role: window.sessionStorage.getItem('auth_role')
+    }
+  );
+  function addAuth(auth) {
+    setAuth(auth);
   }
-  const [user, setUser] = useState(window.sessionStorage.getItem('auth_user'));
-  function addUser(username) {
-    setUser(username);
-  }
-  const [merchant, setMerchant] = useState();
-  function addMerchant(merch) {
-    setMerchant(merch);
+
+  const [store, setStore] = useState();
+  function addStore(stor) {
+    setStore(stor);
   }
   return (
     <BrowserRouter className="App">
-      <NavBar token={token} user={user} addToken={addToken} addUser={addUser} />
+      <NavBar auth={auth} addAuth={addAuth} />
       <Routes>
         <Route exact path="/" element={<HomePage />} />
-        <Route path='login' element={<LoginPage addToken={addToken} addUser={addUser} />} />
+        <Route path='login' element={<LoginPage addAuth={addAuth} />} />
         <Route path='register' element={<RegisterPage />} />
 
-        <Route path='merchants' element={<MerchantsPage token={token} />} />
+        <Route path='merchants' element={<MerchantsPage auth={auth} />} />
 
-        <Route path='merchants/:id' element={<OneMerchant token={token} addMerchant={addMerchant} />} />
-        <Route path='newMerchant' element={<OneMerchant token={token} />} />
+        <Route path='merchants/:id' element={<OneMerchant auth={auth}/>} />
+        <Route path='newMerchant' element={<OneMerchant auth={auth} />} />
 
-        <Route path='stores' element={<StoresPage token={token} />} />
-        <Route path='merchants/:id/stores' element={<StoresPage token={token} merchant={merchant} />} />
+        <Route path='stores/:id' element={<OneStore auth={auth} addStore={addStore} />} />
+        <Route path='newStore' element={<OneStore auth={auth} />} />
+
+        <Route path='stores' element={<StoresPage auth={auth} />} />
+        <Route path='merchants/:id/stores' element={<StoresPage auth={auth} />} />
+
+
+        {/* <Route path='stores/:id/agents' element={<StoresPage auth={auth} store={store} />} /> */}
 
       </Routes>
     </BrowserRouter>

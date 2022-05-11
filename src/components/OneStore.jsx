@@ -3,25 +3,26 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 
-function OneMerchant({ auth }) {
+const OneStore = ({ auth, addStore }) => {
   let { id } = useParams();
 
-  const [merchant, setMerchant] = useState({
+  const [store, setStore] = useState({
     id: null,
     display_name: "",
     address: "",
     phone_number: "",
     email: "",
-    account_number: "",
+    merchant_id: "",
   });
+  const [merchants, setMerchants] = useState();
 
   useEffect(() => {
-    if (id != undefined) {
+    if (merchants == null) {
       var data = "";
 
       var config = {
         method: "get",
-        url: "http://127.0.0.1:8000/api/merchants/" + id,
+        url: "http://127.0.0.1:8000/api/merchants",
         headers: {
           Authorization: "Bearer " + auth.token,
         },
@@ -30,7 +31,36 @@ function OneMerchant({ auth }) {
 
       axios(config)
         .then(function (response) {
-          setMerchant(response.data.merchant);
+          setMerchants(response.data.merchants);
+          // console.log(JSON.stringify(response.data));
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+    if (id != undefined) {
+      var data = "";
+
+      var config = {
+        method: "get",
+        url: "http://127.0.0.1:8000/api/stores/" + id,
+        headers: {
+          Authorization: "Bearer " + auth.token,
+        },
+        data: data,
+      };
+
+      axios(config)
+        .then(function (response) {
+          console.log(JSON.stringify(response.data));
+          setStore({
+            id: response.data.store.id,
+            display_name: response.data.store.display_name,
+            address: response.data.store.address,
+            phone_number: response.data.store.phone_number,
+            email: response.data.store.email,
+            merchant_id: response.data.store.merchant.id,
+          });
         })
         .catch(function (error) {
           console.log(error);
@@ -48,7 +78,7 @@ function OneMerchant({ auth }) {
 
       var config = {
         method: "get",
-        url: "http://127.0.0.1:8000/api/merchants/" + id,
+        url: "http://127.0.0.1:8000/api/stores/" + id,
         headers: {
           Authorization: "Bearer " + auth.token,
         },
@@ -57,32 +87,34 @@ function OneMerchant({ auth }) {
 
       axios(config)
         .then(function (response) {
-          setMerchant(response.data.merchant);
+          console.log(JSON.stringify(response.data));
+          setStore(response.data.store);
         })
         .catch(function (error) {
           console.log(error);
         });
+
       setDisabled(true);
     }
   }
 
   function handleInput(event) {
-    setMerchant({ ...merchant, [event.target.name]: event.target.value });
+    setStore({ ...store, [event.target.name]: event.target.value });
   }
 
   function handleUpdate(e) {
     e.preventDefault();
     var data = JSON.stringify({
-      account_number: merchant.account_number,
-      address: merchant.address,
-      display_name: merchant.display_name,
-      email: merchant.email,
-      phone_number: merchant.phone_number,
+      display_name: store.display_name,
+      address: store.address,
+      phone_number: store.phone_number,
+      email: store.email,
+      merchant_id: store.merchant_id,
     });
 
     var config = {
       method: "put",
-      url: "http://127.0.0.1:8000/api/merchants/" + merchant.id,
+      url: "http://127.0.0.1:8000/api/stores/" + store.id,
       headers: {
         Authorization: "Bearer " + auth.token,
         "Content-Type": "application/json",
@@ -104,16 +136,16 @@ function OneMerchant({ auth }) {
   function handleCreate(e) {
     e.preventDefault();
     var data = JSON.stringify({
-      account_number: merchant.account_number,
-      address: merchant.address,
-      display_name: merchant.display_name,
-      email: merchant.email,
-      phone_number: merchant.phone_number,
+      display_name: store.display_name,
+      address: store.address,
+      phone_number: store.phone_number,
+      email: store.email,
+      merchant_id: store.merchant_id,
     });
 
     var config = {
       method: "post",
-      url: "http://127.0.0.1:8000/api/merchants",
+      url: "http://127.0.0.1:8000/api/stores",
       headers: {
         Authorization: "Bearer " + auth.token,
         "Content-Type": "application/json",
@@ -139,19 +171,19 @@ function OneMerchant({ auth }) {
               {id != undefined ? (
                 <div className="row">
                   <p className="lead fw-normal mb-0 ">
-                    Merchant: {merchant.display_name}
+                    Store: {store.display_name}
                     <br></br>
                     <Link
                       className="link-secondary"
-                      to={"/merchants/" + merchant.id + "/stores"}
+                      to={"/stores/" + store.id + "/agents"}
                     >
-                      See all stores
+                      See all agents
                     </Link>
                   </p>
                 </div>
               ) : (
                 <div className="row">
-                  <p className="lead fw-normal mb-0 ">Create New Merchant</p>
+                  <p className="lead fw-normal mb-0 ">Create New Store</p>
                 </div>
               )}
 
@@ -166,7 +198,7 @@ function OneMerchant({ auth }) {
                     id="id"
                     name="id"
                     className="form-control form-control-lg"
-                    defaultValue={merchant.id}
+                    defaultValue={store.id}
                     readOnly
                   />
                 </div>
@@ -184,19 +216,19 @@ function OneMerchant({ auth }) {
                   name="display_name"
                   className="form-control form-control-lg"
                   placeholder="Enter name"
-                  value={merchant.display_name}
+                  value={store.display_name}
                   required
                   maxLength="255"
                   readOnly={id != undefined ? disabled : false}
                   onChange={handleInput}
                 />
                 {/* {emailDuplicate.duplicate === false ? (
-                    <></>
-                  ) : (
-                    <p className="alert alert-danger">
-                      {emailDuplicate.message}
-                    </p>
-                  )} */}
+                      <></>
+                    ) : (
+                      <p className="alert alert-danger">
+                        {emailDuplicate.message}
+                      </p>
+                    )} */}
               </div>
 
               <div className="form-outline mb-3">
@@ -209,7 +241,7 @@ function OneMerchant({ auth }) {
                   name="address"
                   className="form-control form-control-lg"
                   placeholder="Enter address"
-                  value={merchant.address}
+                  value={store.address}
                   maxLength="50"
                   readOnly={id != undefined ? disabled : false}
                   onChange={handleInput}
@@ -226,8 +258,7 @@ function OneMerchant({ auth }) {
                   name="phone_number"
                   className="form-control form-control-lg"
                   placeholder="Enter phone number"
-                  value={merchant.phone_number}
-                  required
+                  value={store.phone_number}
                   maxLength="50"
                   readOnly={id != undefined ? disabled : false}
                   onChange={handleInput}
@@ -244,7 +275,7 @@ function OneMerchant({ auth }) {
                   name="email"
                   className="form-control form-control-lg"
                   placeholder="Enter email"
-                  value={merchant.email}
+                  value={store.email}
                   required
                   maxLength="50"
                   readOnly={id != undefined ? disabled : false}
@@ -253,21 +284,27 @@ function OneMerchant({ auth }) {
               </div>
 
               <div className="form-outline mb-3">
-                <label className="form-label" htmlFor="account_number">
-                  Account number
+                <label className="form-label" htmlFor="merchant_id">
+                  Merchant
                 </label>
-                <input
-                  type="text"
-                  id="account_number"
-                  name="account_number"
-                  className="form-control form-control-lg"
-                  placeholder="Enter account number"
-                  value={merchant.account_number}
+                <select
+                  className="form-select"
+                  id="merchant_id"
+                  name="merchant_id"
+                  value={store.merchant_id}
                   required
-                  maxLength="50"
-                  readOnly={id != undefined ? disabled : false}
+                  disabled={id != undefined ? disabled : false}
                   onChange={handleInput}
-                />
+                >
+                  <option className="placeholder" key={null} value={null}>
+                    -- select a merchant --
+                  </option>
+                  {merchants?.map((merchant) => (
+                    <option key={merchant.id} value={merchant.id}>
+                      {merchant.display_name}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               {id != undefined && auth.role === "admin" && (
@@ -337,6 +374,6 @@ function OneMerchant({ auth }) {
       </div>
     </div>
   );
-}
+};
 
-export default OneMerchant;
+export default OneStore;

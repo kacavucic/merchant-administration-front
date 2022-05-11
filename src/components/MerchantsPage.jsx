@@ -15,15 +15,29 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { Waveform } from "@uiball/loaders";
 
-function MerchantsPage({ user, token }) {
+function MerchantsPage({ auth }) {
   const [merchants, setMerchants] = useState();
 
   useEffect(() => {
     if (merchants == null) {
-      axios.get("api/merchants").then((res) => {
-        console.log(res.data);
-        setMerchants(res.data.merchants);
-      });
+      var data = "";
+
+      var config = {
+        method: "get",
+        url: "http://127.0.0.1:8000/api/merchants",
+        headers: {
+          Authorization: "Bearer " + auth.token,
+        },
+        data: data,
+      };
+
+      axios(config)
+        .then(function (response) {
+          setMerchants(response.data.merchants);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     }
   }, [merchants]);
 
@@ -48,15 +62,13 @@ function MerchantsPage({ user, token }) {
       method: "delete",
       url: "http://127.0.0.1:8000/api/merchants/" + idToDelete,
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: "Bearer " + auth.token,
       },
       data: data,
     };
 
     axios(config)
       .then(function (response) {
-        // console.log(JSON.stringify(merchants));
-        // console.log(JSON.stringify(idToDelete));
         console.log(JSON.stringify(response.data));
         const del = merchants.filter((merchant) => idToDelete != merchant.id);
         setMerchants(del);
@@ -91,6 +103,10 @@ function MerchantsPage({ user, token }) {
       selector: (row) => row.email,
     },
     {
+      name: "Account Number",
+      selector: (row) => row.account_number,
+    },
+    {
       name: "Info",
       selector: (row) => row.year,
       button: true,
@@ -106,6 +122,7 @@ function MerchantsPage({ user, token }) {
     },
     {
       name: "Delete",
+      omit: auth.role === "user",
       selector: (row) => row.year,
       button: true,
       cell: (row) => (
@@ -121,8 +138,6 @@ function MerchantsPage({ user, token }) {
       ),
     },
   ];
-
-  // const data = merchants;
 
   let navigate = useNavigate();
   function handleOpenInfoPage(e) {
@@ -168,15 +183,23 @@ function MerchantsPage({ user, token }) {
               }
             />
           </div>
-          <div className="row">
-            <div className="col">
-              {/* <Link to="newMerchant"> */}
-                <button className="btn btn-primary float-end" type="button" onClick={handleOpenNewMerchantPage}>
+          {auth.role === "admin" ? (
+            <div className="row">
+              <div className="col">
+                {/* <Link to="newMerchant"> */}
+                <button
+                  className="btn btn-primary float-end"
+                  type="button"
+                  onClick={handleOpenNewMerchantPage}
+                >
                   New Merchant
                 </button>
-              {/* </Link> */}
+                {/* </Link> */}
+              </div>
             </div>
-          </div>
+          ) : (
+            <></>
+          )}
         </div>
         <Dialog open={open} onClose={handleCloseDeleteDialog}>
           <DialogTitle id="alert-dialog-title">

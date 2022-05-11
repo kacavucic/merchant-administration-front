@@ -62,3 +62,9 @@
 .navbar-dark .navbar-nav .nav-link.disabled {
   color: #fff;
 }
+
+select {
+  height: 47px;
+  box-sizing: border-box;
+}
+

@@ -15,24 +15,54 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { Waveform } from "@uiball/loaders";
 
-function StoresPage({ user, token, merchant }) {
-  // let { id } = useParams();
+function StoresPage({ auth }) {
+  let { id } = useParams();
 
-  const [stores, setStores] = useState();
+  const [stores, setStores] = useState([]);
 
   useEffect(() => {
-    if (merchant == undefined) {
-      axios.get("api/stores").then((res) => {
-        console.log(res.data);
-        setStores(res.data.stores);
-      });
+    if (id == undefined) {
+      var data = "";
+
+      var config = {
+        method: "get",
+        url: "http://127.0.0.1:8000/api/stores",
+        headers: {
+          Authorization: "Bearer " + auth.token,
+        },
+        data: data,
+      };
+
+      axios(config)
+        .then(function (response) {
+          setStores(response.data.stores);
+          console.log(id);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     } else {
-      axios.get("api/merchants/" + merchant.id + "/stores").then((res) => {
-        console.log(res.data);
-        setStores(res.data.stores);
-      });
+      var data = "";
+
+      var config = {
+        method: "get",
+        url: "http://127.0.0.1:8000/api/merchants/" + id + "/stores",
+        headers: {
+          Authorization: "Bearer " + auth.token,
+        },
+        data: data,
+      };
+
+      axios(config)
+        .then(function (response) {
+          setStores(response.data.stores);
+          console.log(id);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     }
-  }, [merchant]);
+  }, [id]);
 
   const [open, setOpen] = useState(false);
   const [idToDelete, setIdToDelete] = useState();
@@ -55,14 +85,13 @@ function StoresPage({ user, token, merchant }) {
       method: "delete",
       url: "http://127.0.0.1:8000/api/stores/" + idToDelete,
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: "Bearer " + auth.token,
       },
       data: data,
     };
 
     axios(config)
       .then(function (response) {
-        console.log(JSON.stringify(response.data));
         const del = stores.filter((store) => idToDelete != store.id);
         setStores(del);
         handleCloseDeleteDialog();
@@ -97,18 +126,13 @@ function StoresPage({ user, token, merchant }) {
     },
     {
       name: "Merchant",
-      omit: merchant == undefined ? false : true,
-      selector: (row) => (row.merchant && row.merchant.display_name) || "/",
-      cell: (row) =>
-        (row.merchant && (
-          <Link
-            title="Merchant information"
-            to={"/merchants/" + row.merchant.id}
-          >
-            {row.merchant.display_name}
-          </Link>
-        )) ||
-        "/",
+      omit: id == undefined ? false : true,
+      selector: (row) => row.merchant.display_name,
+      cell: (row) => (
+        <Link title="Merchant information" to={"/merchants/" + row.merchant.id}>
+          {row.merchant.display_name}
+        </Link>
+      ),
     },
     {
       name: "Info",
@@ -126,6 +150,7 @@ function StoresPage({ user, token, merchant }) {
     },
     {
       name: "Delete",
+      omit: auth.role === "user",
       selector: (row) => row.year,
       button: true,
       cell: (row) => (
@@ -146,13 +171,13 @@ function StoresPage({ user, token, merchant }) {
   function handleOpenInfoPage(e) {
     e.preventDefault();
     console.log(e.currentTarget.id);
-    navigate(e.currentTarget.id);
+    navigate("/stores/" + e.currentTarget.id);
   }
 
   function handleOpenNewStorePage(e) {
     e.preventDefault();
     console.log(e.currentTarget.id);
-    navigate("newStore");
+    navigate("/newStore");
   }
 
   const [pending, setPending] = useState(true);
@@ -163,6 +188,12 @@ function StoresPage({ user, token, merchant }) {
     return () => clearTimeout(timeout);
   }, []);
 
+  function displayStoreName(stores) {
+    if (stores.length > 0) {
+      return "Stores of " + stores[0].merchant.display_name;
+    } else return "This merchant has no stores";
+  }
+
   return (
     <>
       <div className="container-fluid ">
@@ -170,11 +201,7 @@ function StoresPage({ user, token, merchant }) {
           <div className="row">
             <div className="col-xs-12 col-md-12"></div>
             <DataTable
-              title={
-                merchant == undefined
-                  ? "Stores"
-                  : "Stores of " + merchant.display_name
-              }
+              title={id == undefined ? "Stores" : displayStoreName(stores)}
               columns={columns}
               data={stores}
               defaultSortField="id"
@@ -190,17 +217,21 @@ function StoresPage({ user, token, merchant }) {
               }
             />
           </div>
-          <div className="row">
-            <div className="col">
-              <button
-                className="btn btn-primary float-end"
-                type="button"
-                onClick={handleOpenNewStorePage}
-              >
-                New Store
-              </button>
+          {auth.role === "admin" ? (
+            <div className="row">
+              <div className="col">
+                <button
+                  className="btn btn-primary float-end"
+                  type="button"
+                  onClick={handleOpenNewStorePage}
+                >
+                  New Store
+                </button>
+              </div>
             </div>
-          </div>
+          ) : (
+            <></>
+          )}
         </div>
         <Dialog open={open} onClose={handleCloseDeleteDialog}>
           <DialogTitle id="alert-dialog-title">

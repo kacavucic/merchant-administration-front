@@ -5,8 +5,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 import Icon from "@mui/material/Icon";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 
-function NavBar({ token, user, addToken, addUser }) {
+function NavBar({ auth, addAuth }) {
   let navigate = useNavigate();
   function handleLogout(e) {
     // e.preventDefault();
@@ -24,8 +25,12 @@ function NavBar({ token, user, addToken, addUser }) {
 
         window.sessionStorage.removeItem("auth_token");
         window.sessionStorage.removeItem("auth_user");
-        addToken(null);
-        addUser(null);
+        window.sessionStorage.removeItem("auth_role");
+        addAuth({
+          token: null,
+          username: null,
+          role: null,
+        });
         //navigate("/");
       })
       .catch(function (error) {
@@ -57,7 +62,7 @@ function NavBar({ token, user, addToken, addUser }) {
                   Home
                 </Link>
               </li>
-              {token == null ? (
+              {auth.token == null ? (
                 <></>
               ) : (
                 <li className="nav-item me-3 me-lg-0 dropdown">
@@ -94,7 +99,7 @@ function NavBar({ token, user, addToken, addUser }) {
                 </li>
               )}
             </ul>
-            {token == null ? (
+            {auth.token == null ? (
               <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
                 <li className="nav-item">
                   <Link className="nav-link" to="/login">
@@ -111,7 +116,12 @@ function NavBar({ token, user, addToken, addUser }) {
               <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
                 <li className="nav-item">
                   <a className="nav-link disabled" href="#">
-                    <AccountCircleIcon icon={faUser} /> {user}
+                    {auth.role === "admin" ? (
+                      <AdminPanelSettingsIcon icon={faUser} />
+                    ) : (
+                      <AccountCircleIcon icon={faUser} />
+                    )}
+                    {auth.username}
                   </a>
                 </li>
                 <li className="nav-item">
