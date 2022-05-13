@@ -10,6 +10,8 @@ import HomePage from './components/HomePage';
 import OneMerchant from './components/OneMerchant';
 import StoresPage from './components/StoresPage';
 import OneStore from './components/OneStore';
+import StoreFinder from './components/StoreFinder';
+import { Wrapper } from "@googlemaps/react-wrapper";
 
 function App() {
   const [auth, setAuth] = useState(
@@ -27,6 +29,7 @@ function App() {
   function addStore(stor) {
     setStore(stor);
   }
+
   return (
     <BrowserRouter className="App">
       <NavBar auth={auth} addAuth={addAuth} />
@@ -37,7 +40,7 @@ function App() {
 
         <Route path='merchants' element={<MerchantsPage auth={auth} />} />
 
-        <Route path='merchants/:id' element={<OneMerchant auth={auth}/>} />
+        <Route path='merchants/:id' element={<OneMerchant auth={auth} />} />
         <Route path='newMerchant' element={<OneMerchant auth={auth} />} />
 
         <Route path='stores/:id' element={<OneStore auth={auth} addStore={addStore} />} />
@@ -45,6 +48,8 @@ function App() {
 
         <Route path='stores' element={<StoresPage auth={auth} />} />
         <Route path='merchants/:id/stores' element={<StoresPage auth={auth} />} />
+
+        {/* <Route path='findStore' element={<Wrapper apiKey="AIzaSyDAyX4pd5h-Rdl7UKR5p58cBGxe9puCi6Q"><StoreFinder /></Wrapper>} /> */}
 
 
         {/* <Route path='stores/:id/agents' element={<StoresPage auth={auth} store={store} />} /> */}

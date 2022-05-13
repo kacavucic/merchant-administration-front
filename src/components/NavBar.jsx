@@ -6,6 +6,7 @@ import { faUser } from "@fortawesome/free-regular-svg-icons";
 import Icon from "@mui/material/Icon";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import LocationSearchingIcon from "@mui/icons-material/LocationSearching";
 
 function NavBar({ auth, addAuth }) {
   let navigate = useNavigate();
@@ -60,6 +61,13 @@ function NavBar({ auth, addAuth }) {
               <li className="nav-item me-3 me-lg-0 dropdown">
                 <Link className="nav-link" to="/">
                   Home
+                </Link>
+              </li>
+
+              <li className="nav-item me-3 me-lg-0 dropdown">
+                <Link className="nav-link" to="/findStore">
+                  {/* <LocationSearchingIcon></LocationSearchingIcon> */}
+                  Find Store
                 </Link>
               </li>
               {auth.token == null ? (

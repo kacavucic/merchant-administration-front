@@ -16,6 +16,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { Waveform } from "@uiball/loaders";
 
 function MerchantsPage({ auth }) {
+
+  const [loading, setLoading] = useState(true);
   const [merchants, setMerchants] = useState();
 
   useEffect(() => {
@@ -34,6 +36,7 @@ function MerchantsPage({ auth }) {
       axios(config)
         .then(function (response) {
           setMerchants(response.data.merchants);
+          setLoading(false);
         })
         .catch(function (error) {
           console.log(error);
@@ -152,13 +155,13 @@ function MerchantsPage({ auth }) {
     navigate("/newMerchant");
   }
 
-  const [pending, setPending] = useState(true);
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setPending(false);
-    }, 2000);
-    return () => clearTimeout(timeout);
-  }, []);
+  // const [pending, setPending] = useState(true);
+  // useEffect(() => {
+  //   const timeout = setTimeout(() => {
+  //     setPending(false);
+  //   }, 2000);
+  //   return () => clearTimeout(timeout);
+  // }, []);
 
   return (
     <>
@@ -177,7 +180,7 @@ function MerchantsPage({ auth }) {
               responsive
               subHeaderAlign="right"
               subHeaderWrap
-              progressPending={pending}
+              progressPending={loading}
               progressComponent={
                 <Waveform size={40} lineWeight={3.5} speed={1} color="black" />
               }

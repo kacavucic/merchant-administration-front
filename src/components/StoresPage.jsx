@@ -18,6 +18,7 @@ import { Waveform } from "@uiball/loaders";
 function StoresPage({ auth }) {
   let { id } = useParams();
 
+  const [loading, setLoading] = useState(true);
   const [stores, setStores] = useState([]);
 
   useEffect(() => {
@@ -37,6 +38,7 @@ function StoresPage({ auth }) {
         .then(function (response) {
           setStores(response.data.stores);
           console.log(id);
+          setLoading(false);
         })
         .catch(function (error) {
           console.log(error);
@@ -57,6 +59,7 @@ function StoresPage({ auth }) {
         .then(function (response) {
           setStores(response.data.stores);
           console.log(id);
+          setLoading(false);
         })
         .catch(function (error) {
           console.log(error);
@@ -180,13 +183,13 @@ function StoresPage({ auth }) {
     navigate("/newStore");
   }
 
-  const [pending, setPending] = useState(true);
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setPending(false);
-    }, 2000);
-    return () => clearTimeout(timeout);
-  }, []);
+  // const [pending, setPending] = useState(true);
+  // useEffect(() => {
+  //   const timeout = setTimeout(() => {
+  //     setPending(false);
+  //   }, 2000);
+  //   return () => clearTimeout(timeout);
+  // }, []);
 
   function displayStoreName(stores) {
     if (stores.length > 0) {
@@ -211,7 +214,7 @@ function StoresPage({ auth }) {
               responsive
               subHeaderAlign="right"
               subHeaderWrap
-              progressPending={pending}
+              progressPending={loading}
               progressComponent={
                 <Waveform size={40} lineWeight={3.5} speed={1} color="black" />
               }
