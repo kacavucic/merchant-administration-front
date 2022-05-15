@@ -177,6 +177,58 @@ function StoresPage({ auth }) {
     navigate("/stores/" + e.currentTarget.id);
   }
 
+  const [searchParam, setSearchParam] = useState("");
+
+  function handleInput(event) {
+    setSearchParam({ ...searchParam, [event.target.name]: event.target.value });
+  }
+
+  function handleSearch(e) {
+    e.preventDefault();
+    console.log(JSON.stringify(searchParam));
+    var config = {
+      method: "get",
+      url:
+        "http://127.0.0.1:8000/api/stores?display_name=" + (searchParam.display_name || "") +
+        "&sort_by=" +
+        (searchParam.sort_by || ""),
+      headers: {
+        Authorization: "Bearer " + auth.token,
+      },
+    };
+
+    axios(config)
+      .then(function (response) {
+        setStores(response.data.stores);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
+  function handleSortSelect(e) {
+    handleInput(e);
+    var config = {
+      method: "get",
+      url:
+        "http://127.0.0.1:8000/api/stores?display_name=" +
+        (searchParam.display_name || "") +
+        "&sort_by=" +
+        (e.target.value || ""),
+      headers: {
+        Authorization: "Bearer " + auth.token,
+      },
+    };
+
+    axios(config)
+      .then(function (response) {
+        setStores(response.data.stores);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
   function handleOpenNewStorePage(e) {
     e.preventDefault();
     console.log(e.currentTarget.id);
@@ -201,6 +253,82 @@ function StoresPage({ auth }) {
     <>
       <div className="container-fluid ">
         <div className="col-xs-12 table-container">
+          <div className="row">
+            <div className="col-4">
+            <form className="mt-3" onSubmit={handleSearch}>
+                <div className="row">
+                  <div className="col-8">
+                    <input
+                      type="text"
+                      id="display_name"
+                      name="display_name"
+                      className="form-control form-control"
+                      placeholder="Search by display name"
+                      maxLength="50"
+                      onChange={handleInput}
+                    />
+                  </div>
+                  <div className="col-4">
+                    <div className="text-center text-lg-start ">
+                      <button
+                        type="submit"
+                        className="btn btn-secondary  float-start"
+                        style={{
+                          paddingLeft: 2.5 + "rem",
+                          paddingRight: 2.5 + "rem",
+                        }}
+                      >
+                        Search
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div className="col-2">
+              <select
+                className="form-select mt-3"
+                id="sort_by"
+                name="sort_by"
+                value={searchParam.sort_by}
+                onChange={handleSortSelect}
+              >
+                <option hidden key={null} value={null}>
+                      -- sort table by --
+                    </option>
+                <option key="id" value="id">
+                  ID
+                </option>
+                <option key="id_desc" value="id_desc">
+                  ID (desc)
+                </option>
+                <option
+                  key="display_name"
+                  value="display_name"
+                >
+                  Name
+                </option>
+                <option
+                  key="display_name_desc"
+                  value="display_name_desc"
+                >
+                  Name (desc)
+                </option>
+                <option
+                  key="email"
+                  value="email"
+                >
+                  Email
+                </option>
+                <option
+                  key="email_desc"
+                  value="email_desc"
+                >
+                  Email (desc)
+                </option>
+              </select>
+            </div>
+          </div>
           <div className="row">
             <div className="col-xs-12 col-md-12"></div>
             <DataTable

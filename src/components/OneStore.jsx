@@ -5,7 +5,7 @@ import { useNavigate, useParams, Link } from "react-router-dom";
 import { Waveform } from "@uiball/loaders";
 import { DotSpinner } from "@uiball/loaders";
 
-const OneStore = ({ auth, addStore }) => {
+const OneStore = ({ auth }) => {
   let { id } = useParams();
 
   const [loading, setLoading] = useState(true);
@@ -206,30 +206,6 @@ const OneStore = ({ auth, addStore }) => {
 
                 <div className="divider d-flex align-items-center my-4"></div>
 
-                <div className="form-outline mb-3">
-                  <label className="form-label" htmlFor="merchant_id">
-                    Merchant
-                  </label>
-                  <select
-                    className="form-select"
-                    id="merchant_id"
-                    name="merchant_id"
-                    value={store.merchant_id}
-                    required
-                    disabled={id != undefined ? disabled : false}
-                    onChange={handleInput}
-                  >
-                    <option className="placeholder" key={null} value={null}>
-                      -- select a merchant --
-                    </option>
-                    {merchants?.map((merchant) => (
-                      <option key={merchant.id} value={merchant.id}>
-                        {merchant.display_name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
                 {id != undefined ? (
                   <div className="form-outline mb-4">
                     <label className="form-label" htmlFor="id">
@@ -247,6 +223,30 @@ const OneStore = ({ auth, addStore }) => {
                 ) : (
                   <></>
                 )}
+
+                <div className="form-outline mb-3">
+                  <label className="form-label" htmlFor="merchant_id">
+                    Merchant
+                  </label>
+                  <select
+                    className="form-select"
+                    id="merchant_id"
+                    name="merchant_id"
+                    value={store.merchant_id}
+                    required
+                    disabled={id != undefined ? disabled : false}
+                    onChange={handleInput}
+                  >
+                    <option hidden key={null} value={null}>
+                      -- select a merchant --
+                    </option>
+                    {merchants?.map((merchant) => (
+                      <option key={merchant.id} value={merchant.id}>
+                        {merchant.display_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
                 <div className="form-outline mb-3">
                   <label className="form-label" htmlFor="display_name">
